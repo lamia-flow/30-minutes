@@ -10,6 +10,8 @@ import {
 import Leaflet from 'leaflet'
 import L from 'leaflet'
 import stationIcon from './icon/citybike.svg'
+import tooFarIcon from './icon/notgonnamakeit.svg'
+import locationIcon from './icon/youarehere.svg'
 
 const windowSizing = () => ({
     height: `100vh`,
@@ -23,11 +25,22 @@ const windowSizing = () => ({
     popupAnchor: [10, -44],
     iconSize: [25, 45],
   })
+  export const notPointerIcon = new L.Icon({
+    iconUrl: require('./icon/citybike.svg'),
+    iconRetinaUrl: require('./icon/notgonnamakeit.svg'),
+    iconAnchor: [5, 55],
+    popupAnchor: [10, -44],
+    iconSize: [25, 45],
+  })
 
   const MyPopupMarker = ({ station }) => {
 
+    const icon = station.isInside 
+      ? pointerIcon
+      : notPointerIcon;
+
     return (
-    <Marker position={[station.y, station.x]} icon={pointerIcon}>
+    <Marker position={[station.y, station.x]} icon={icon}>
       <Popup >{station.name}</Popup>s
     </Marker>
     
@@ -48,8 +61,9 @@ const windowSizing = () => ({
 
     render() {
       console.log("My marker list", this.props.stations)
-      if(this.props.stations.stations.length > 0) {
-        const items = this.props.stations.stations.map(station => (
+   
+      if(this.props.stations.length > 0) {
+        const items = this.props.stations.map(station => (
           <MyPopupMarker key={station.id} station={station} />
         ))
         return <Fragment>{items}</Fragment>
@@ -73,32 +87,46 @@ class ThirtyMinutesMap extends React.Component {
     }
   }
 
-  onStationClick(e) {
-      // center circle on clicked station
-      // do some magic to define the paths etc.....
+  stationsInsideCircle = (stations, center) => {
+    const centerLatLng = new L.latLng(center);
+    return stations.filter(station => {
+      return centerLatLng.distanceTo([station.y, station.x]) < 2000;
+    });
+  }
+
+  // lat y
+  // lng x
+  insideCircle(x, y, center_x, center_y, radius) {
+    return Math.sqrt(x - center_x) + Math.sqrt(y - center_y) <= Math.sqrt(radius);
   }
 
   render() {
       // @todo: somewhere else
-     const stationMarker = Leaflet.icon({
-      iconUrl: stationIcon,
-      iconSize: [38, 95],
-      iconAnchor: [22, 94],
+     const locationMarkerIcon = Leaflet.icon({
+      iconUrl: locationIcon,
+      iconSize: [35, 35],
+      iconAnchor: [15.5, 15.5],
       popupAnchor: [-3, -76],
       shadowSize: [68, 95],
       shadowAnchor: [22, 94]
     });
 
     const position = [this.props.lat, this.props.lng];
-    const {stations} = this.props
+    const {stations} = this.props.stations;
+    
+    // Latitude: 1 deg = 110.574 km
+
     return (
-        <Map center={position} zoom={16} style={windowSizing()}>
+        <Map center={position} zoom={13} style={windowSizing()}>
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://cdn.digitransit.fi/map/v1/hsl-map-256/{z}/{x}/{y}.png"
           />
-      {stations && <MyMarkersList stations={stations}/>}
-          <Circle center={position} radius={100}></Circle>
+          {stations && <MyMarkersList stations={this.stationsInsideCircle(stations, position)}/>}
+          <Marker position={position} icon={locationMarkerIcon}>
+            <Popup>You are here</Popup>
+          </Marker>
+          <Circle center={position} radius={2000}></Circle>
         </Map>
       );
   }
