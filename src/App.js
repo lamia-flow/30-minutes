@@ -11,11 +11,6 @@ class App extends React.Component {
       lng: null,
       zoom: 13,
       stations: null,
-      area: {
-        lat: null,
-        lat: null,
-        radius: 3000,
-      },
     };
   }
 
