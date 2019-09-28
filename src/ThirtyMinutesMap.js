@@ -17,6 +17,14 @@ const windowSizing = () => ({
 
 class ThirtyMinutesMap extends React.Component {
 
+    /*constructor(props) {
+        super(props);
+        this.state = {
+            circleposition: null
+        };
+        this.onStationClick = this.onStationClick.bind(this);
+    }*/
+
   componentDidMount() {
     console.log("Map get mounted");
   }
@@ -27,17 +35,18 @@ class ThirtyMinutesMap extends React.Component {
     }
   }
 
-  onStationClick(e) {
-      // center circle on clicked station
-      // do some magic to define the paths etc.....
-  }
+  /*onStationClick(e) {
+            this.setState({
+                circleposition: [this.props.lat, this.props.lng]
+            });
+  }*/
 
   render() {
       // @todo: somewhere else
      const stationMarker = Leaflet.icon({
       iconUrl: stationIcon,
-      iconSize: [38, 95],
-      iconAnchor: [22, 94],
+      iconSize: [35, 35],
+      iconAnchor: [15.5, 15.5],
       popupAnchor: [-3, -76],
       shadowSize: [68, 95],
       shadowAnchor: [22, 94]
