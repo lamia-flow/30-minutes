@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import ThirtyMinutesMap from './ThirtyMinutesMap';
+import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,9 +10,24 @@ class App extends React.Component {
     this.state = {
       lat: null,
       lng: null,
-      zoom: 13
+      zoom: 13,
+      stations: null
     };
   }
+
+  getStationList = () => {
+    axios.get('https://api.digitransit.fi/routing/v1/routers/hsl/bike_rental', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+      .then((response) => {
+        this.setState({
+          stations: response.data
+        })
+        console.log("Fetched the stations!")
+      }).catch(() => {console.log("Failed to fetch the stations")});
+  };
 
   componentDidMount() {
     if (navigator && navigator.geolocation) {
@@ -24,6 +40,7 @@ class App extends React.Component {
         });
       });
     }
+    this.getStationList()
   }
 
   componentDidUpdate(prevProps, prevState) {
