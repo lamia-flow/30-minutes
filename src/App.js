@@ -25,7 +25,6 @@ class App extends React.Component {
         this.setState({
           stations: response.data
         })
-        console.log("Fetched the stations!")
       }).catch(() => {console.log("Failed to fetch the stations")});
   };
 
@@ -44,15 +43,15 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.lat !== this.state.lat || prevState.lng !== this.state.lng) {
+    if (prevState.lat !== this.state.lat || prevState.lng !== this.state.lng || prevState.stations !== this.state.stations) {
       return true;
     }
   }
 
   render() {
-    const {lat, lng} = this.state
+    const {lat, lng, stations} = this.state
     if(lat && lng) {
-      return <ThirtyMinutesMap lat={lat} lng={lng} />;
+      return <ThirtyMinutesMap lat={lat} lng={lng} stations={stations} key={stations}/>;
     }
     return <div>Loading...</div>
   }
