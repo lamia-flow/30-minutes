@@ -1,26 +1,66 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import 'leaflet/dist/leaflet.css';
+import { Map, TileLayer, Marker, Popup, Circle, DivOverlay } from 'react-leaflet';
+import { jsxClosingElement } from '@babel/types';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const windowSizing = () => ({
+        height: `1000px`,
+        width: `1000px`,
+  });
+
+
+
+class ThirtyMinutesMap extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+
+    this.state = {
+      lat: null,
+      lng: null,
+      zoom: 13, 
+    }
+
+  }
+
+  componentDidMount() {
+    const {latitude: lat, longitude: lng} = this.getCoords();
+  
+    this.setState({
+      lat,
+      lng,
+    })
+  };
+
+  getCoords = () => {
+    // get coords
+  };
+
+  render() {
+    const position = [this.state.lat, this.state.lng];
+    if (position.lat && position.lng) {
+      return (
+        <Map center={position} zoom={this.state.zoom} style={windowSizing()}>
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url='https://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          />
+          <Marker position={position}>
+            <Popup>
+              A pretty CSS3 popup. <br/> Easily customizable.
+            </Popup>
+          </Marker>
+          <Circle center={position} radius="500">
+          </Circle>
+        </Map>
+      );
+    }
+
+    return (<div>Loading...</div>);
+  }
 }
 
-export default App;
+ export default ThirtyMinutesMap;
+
