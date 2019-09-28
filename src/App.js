@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import ThirtyMinutesMap from './ThirtyMinutesMap';
 import axios from 'axios';
 
@@ -11,8 +10,27 @@ class App extends React.Component {
       lat: null,
       lng: null,
       zoom: 13,
-      stations: null
+      stations: null,
+      area: {
+        lat: null,
+        lat: null,
+        radius: 3000,
+      },
     };
+  }
+
+  setCurrentLocation = () => {
+    if (navigator && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(({coords}) => {
+
+        const {latitude: lat, longitude: lng} = coords;
+
+        this.setState({
+          lat,
+          lng,
+        });
+      });
+    }
   }
 
   getStationList = () => {
@@ -20,25 +38,16 @@ class App extends React.Component {
       headers: {
         'Content-Type': 'application/json'
       },
-    })
-      .then((response) => {
+    }).then(({ data }) => {
+        const { stations } = data;
         this.setState({
-          stations: response.data
+          stations
         })
       }).catch(() => {console.log("Failed to fetch the stations")});
   };
 
   componentDidMount() {
-    if (navigator && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const coords = pos.coords;
-        console.log(coords);
-        this.setState({
-          lat: coords.latitude,
-          lng: coords.longitude
-        });
-      });
-    }
+    this.setCurrentLocation();
     this.getStationList()
   }
 
@@ -49,10 +58,12 @@ class App extends React.Component {
   }
 
   render() {
-    const {lat, lng, stations} = this.state
-    if(lat && lng) {
-      return <ThirtyMinutesMap lat={lat} lng={lng} stations={stations} key={stations}/>;
+    const {lat, lng, stations, area} = this.state
+
+    if(lat && lng && stations) {
+      return <ThirtyMinutesMap lat={lat} lng={lng} stations={stations} key={stations} area={area} />;
     }
+
     return <div>Loading...</div>
   }
 }
