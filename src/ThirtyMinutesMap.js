@@ -12,8 +12,8 @@ import L from 'leaflet'
 import stationIcon from './icon/citybike.svg'
 
 const windowSizing = () => ({
-    height: `1000px`,
-    width: `1000px`
+    height: `100vh`,
+    width: `100vw`
   });
 
   export const pointerIcon = new L.Icon({
@@ -25,9 +25,10 @@ const windowSizing = () => ({
   })
 
   const MyPopupMarker = ({ station }) => {
+
     return (
-    <Marker position={[station.x, station.y]} icon={pointerIcon}>
-      <Popup>{station.name}</Popup>
+    <Marker position={[station.y, station.x]} icon={pointerIcon}>
+      <Popup >{station.name}</Popup>s
     </Marker>
     
   )}
@@ -96,13 +97,6 @@ class ThirtyMinutesMap extends React.Component {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://cdn.digitransit.fi/map/v1/hsl-map-256/{z}/{x}/{y}.png"
           />
-          <Marker 
-            position={position}
-            icon={stationMarker}
-            onClick={this.onStationClick}
-            >
-            
-          </Marker>
       {stations && <MyMarkersList stations={stations}/>}
           <Circle center={position} radius={100}></Circle>
         </Map>
