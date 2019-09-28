@@ -3,11 +3,12 @@ import './App.css';
 import 'leaflet/dist/leaflet.css';
 import { Map, TileLayer, Marker, Popup, Circle, DivOverlay } from 'react-leaflet';
 import { jsxClosingElement } from '@babel/types';
+import axios from 'axios';
 
-  const windowSizing = () => ({
-        height: `1000px`,
-        width: `1000px`,
-  });
+const windowSizing = () => ({
+  height: `1000px`,
+  width: `1000px`,
+});
 
 
 
@@ -20,18 +21,27 @@ class ThirtyMinutesMap extends React.Component {
     this.state = {
       lat: null,
       lng: null,
-      zoom: 13, 
+      zoom: 13,
+      stations: null
     }
 
   }
 
   componentDidMount() {
-    const {latitude: lat, longitude: lng} = this.getCoords();
-  
-    this.setState({
-      lat,
-      lng,
+    this.getStationList();
+  };
+
+  getStationList = () => {
+    axios.get('https://api.digitransit.fi/routing/v1/routers/hsl/bike_rental', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
     })
+      .then((response) => {
+        this.setState({
+          stations: response.data
+        })
+      }).finally(() => { });
   };
 
   getCoords = () => {
@@ -49,7 +59,7 @@ class ThirtyMinutesMap extends React.Component {
           />
           <Marker position={position}>
             <Popup>
-              A pretty CSS3 popup. <br/> Easily customizable.
+              A pretty CSS3 popup. <br /> Easily customizable.
             </Popup>
           </Marker>
           <Circle center={position} radius="500">
@@ -62,5 +72,5 @@ class ThirtyMinutesMap extends React.Component {
   }
 }
 
- export default ThirtyMinutesMap;
+export default ThirtyMinutesMap;
 
