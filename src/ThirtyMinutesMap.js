@@ -7,16 +7,18 @@ import {
   Popup,
   Circle,
 } from "react-leaflet";
+import Leaflet from 'leaflet';
+import stationIcon from './icon/citybike.svg'
 
 const windowSizing = () => ({
-    height: `100vh`,
-    width: `100vw`
-  });
+  height: `100vh`,
+  width: `100vw`
+});
 
 class ThirtyMinutesMap extends React.Component {
 
   componentDidMount() {
-    console.log("Map get mounted")
+    console.log("Map get mounted");
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -24,7 +26,22 @@ class ThirtyMinutesMap extends React.Component {
       return true;
     }
   }
+
+  onStationClick(e) {
+      // center circle on clicked station
+      // do some magic to define the paths etc.....
+  }
+
   render() {
+      // @todo: somewhere else
+     const stationMarker = Leaflet.icon({
+      iconUrl: stationIcon,
+      iconSize: [38, 95],
+      iconAnchor: [22, 94],
+      popupAnchor: [-3, -76],
+      shadowSize: [68, 95],
+      shadowAnchor: [22, 94]
+    });
 
     const position = [this.props.lat, this.props.lng];
     return (
@@ -33,12 +50,14 @@ class ThirtyMinutesMap extends React.Component {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://cdn.digitransit.fi/map/v1/hsl-map-256/{z}/{x}/{y}.png"
           />
-          <Marker position={position}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
+          <Marker 
+            position={position}
+            icon={stationMarker}
+            onClick={this.onStationClick}
+            >
+            
           </Marker>
-          <Circle center={position} radius="500"></Circle>
+          <Circle center={position} radius={100}></Circle>
         </Map>
       );
   }
