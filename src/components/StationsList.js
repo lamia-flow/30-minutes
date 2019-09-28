@@ -16,9 +16,10 @@ class StationsList extends React.Component {
     }
 
     render() {
+      const { stationSelect } = this.props;
       if(this.props.stations.length > 0) {
         const items = this.props.stations.map(station => (
-          <StationMarker key={station.id} station={station} />
+          <StationMarker key={station.id} station={station} onClick={stationSelect(station)} />
         ))
         return <Fragment>{items}</Fragment>
       }

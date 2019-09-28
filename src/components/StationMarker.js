@@ -5,13 +5,13 @@ import {
 } from "react-leaflet";
 import markerIcon from '../leaflet/markerIcon';
 
-const StationMarker = ({ station }) => {
+const StationMarker = ({ station, onClick }) => {
     const icon = station.isInside 
         ? markerIcon(require('../icon/citybike.svg'))
         : markerIcon(require('../icon/notgonnamakeit.svg'));
 
     return (
-        <Marker position={[station.y, station.x]} icon={icon}>
+        <Marker position={[station.y, station.x]} icon={icon} onClick={onClick}>
             <Popup >{station.name}</Popup>s
         </Marker>
     );
