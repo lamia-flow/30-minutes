@@ -1,66 +1,44 @@
-import React from 'react';
-import './App.css';
-import 'leaflet/dist/leaflet.css';
-import { Map, TileLayer, Marker, Popup, Circle, DivOverlay } from 'react-leaflet';
-import { jsxClosingElement } from '@babel/types';
+import React from "react";
+import "./App.css";
+import ThirtyMinutesMap from './ThirtyMinutesMap';
 
-  const windowSizing = () => ({
-        height: `1000px`,
-        width: `1000px`,
-  });
-
-
-
-class ThirtyMinutesMap extends React.Component {
-
+class App extends React.Component {
   constructor(props) {
     super(props);
-
 
     this.state = {
       lat: null,
       lng: null,
-      zoom: 13, 
-    }
-
+      zoom: 13
+    };
   }
 
   componentDidMount() {
-    const {latitude: lat, longitude: lng} = this.getCoords();
-  
-    this.setState({
-      lat,
-      lng,
-    })
-  };
+    if (navigator && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const coords = pos.coords;
+        console.log(coords);
+        this.setState({
+          lat: coords.latitude,
+          lng: coords.longitude
+        });
+      });
+    }
+  }
 
-  getCoords = () => {
-    // get coords
-  };
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.lat !== this.state.lat || prevState.lng !== this.state.lng) {
+      return true;
+    }
+  }
 
   render() {
-    const position = [this.state.lat, this.state.lng];
-    if (position.lat && position.lng) {
-      return (
-        <Map center={position} zoom={this.state.zoom} style={windowSizing()}>
-          <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url='https://{s}.tile.osm.org/{z}/{x}/{y}.png'
-          />
-          <Marker position={position}>
-            <Popup>
-              A pretty CSS3 popup. <br/> Easily customizable.
-            </Popup>
-          </Marker>
-          <Circle center={position} radius="500">
-          </Circle>
-        </Map>
-      );
+    const {lat, lng} = this.state
+    if(lat && lng) {
+      return <ThirtyMinutesMap lat={lat} lng={lng} />;
     }
-
-    return (<div>Loading...</div>);
+    return <div>Loading...</div>
   }
 }
 
- export default ThirtyMinutesMap;
-
+export default App;
