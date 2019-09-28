@@ -8,36 +8,55 @@ import {
   Circle,
 } from "react-leaflet";
 import Leaflet from 'leaflet'
+import L from 'leaflet'
+import stationIcon from './icon/citybike.svg'
 
 const windowSizing = () => ({
     height: `1000px`,
     width: `1000px`
   });
-  const stationMarker = Leaflet.icon({
-    iconUrl: 'https://place-hold.it/100x100',
-    iconSize: [38, 95],
-    iconAnchor: [22, 94],
-    popupAnchor: [-3, -76],
-    shadowSize: [68, 95],
-    shadowAnchor: [22, 94]
-  });
 
-  const MyPopupMarker = ({ station }) => (
-    <Marker position={{lat:station.x, lng:station.lng}} icon={stationMarker}>
+  export const pointerIcon = new L.Icon({
+    iconUrl: require('./icon/citybike.svg'),
+    iconRetinaUrl: require('./icon/citybike.svg'),
+    iconAnchor: [5, 55],
+    popupAnchor: [10, -44],
+    iconSize: [25, 45],
+  })
+
+  const MyPopupMarker = ({ station }) => {
+    return (
+    <Marker position={[station.x, station.y]} icon={pointerIcon}>
       <Popup>{station.name}</Popup>
     </Marker>
     
-  )
+  )}
   
-  const MyMarkersList = (props) => {
-    if(props.stations.length > 0) {
-      const items = props.stations.stations.map(station => (
-        <MyPopupMarker key={station.id} station={station} />
-      ))
-      return <Fragment>{items}</Fragment>
+  class MyMarkersList extends React.Component {
+    componentDidUpdate(prevProps, prevState) {
+      if (prevProps.stations !== this.props.stations) {
+        return true;
+      }
     }
-    return <div>Empty</div>
-  }
+  
+    shouldComponentUpdate(nextProps, nextState) {
+      if (nextProps.stations !== this.props.stations) {
+        return true;
+      }
+    }
+
+    render() {
+      console.log("My marker list", this.props.stations)
+      if(this.props.stations.stations.length > 0) {
+        const items = this.props.stations.stations.map(station => (
+          <MyPopupMarker key={station.id} station={station} />
+        ))
+        return <Fragment>{items}</Fragment>
+      }
+      return <div>Empty</div>
+    }
+  } 
+    
   
 class ThirtyMinutesMap extends React.Component {
 
@@ -53,8 +72,21 @@ class ThirtyMinutesMap extends React.Component {
     }
   }
 
-  getDerived
+  onStationClick(e) {
+      // center circle on clicked station
+      // do some magic to define the paths etc.....
+  }
+
   render() {
+      // @todo: somewhere else
+     const stationMarker = Leaflet.icon({
+      iconUrl: stationIcon,
+      iconSize: [38, 95],
+      iconAnchor: [22, 94],
+      popupAnchor: [-3, -76],
+      shadowSize: [68, 95],
+      shadowAnchor: [22, 94]
+    });
 
     const position = [this.props.lat, this.props.lng];
     const {stations} = this.props
@@ -62,15 +94,17 @@ class ThirtyMinutesMap extends React.Component {
         <Map center={position} zoom={16} style={windowSizing()}>
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
+            url="https://cdn.digitransit.fi/map/v1/hsl-map-256/{z}/{x}/{y}.png"
           />
-          <Marker position={position}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
+          <Marker 
+            position={position}
+            icon={stationMarker}
+            onClick={this.onStationClick}
+            >
+            
           </Marker>
-      {stations && <MyMarkersList key={stations} stations={stations}/>}
-          <Circle center={position} radius="500"></Circle>
+      {stations && <MyMarkersList stations={stations}/>}
+          <Circle center={position} radius={100}></Circle>
         </Map>
       );
   }
