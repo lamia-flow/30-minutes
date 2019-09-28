@@ -9,8 +9,8 @@ import {
 } from "react-leaflet";
 
 const windowSizing = () => ({
-    height: `1000px`,
-    width: `1000px`
+    height: `100vh`,
+    width: `100vw`
   });
 
 class ThirtyMinutesMap extends React.Component {
