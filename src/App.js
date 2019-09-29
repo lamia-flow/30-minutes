@@ -30,7 +30,7 @@ class App extends React.Component {
       })
       .then(response => {
         this.setState({
-          stations: response.data
+          stations: response.data.stations
         });
       })
       .catch(() => {
@@ -64,7 +64,7 @@ class App extends React.Component {
 
   render() {
     const { lat, lng, stations } = this.state;
-    if (lat && lng) {
+    if (lat && lng && stations) {
       return (
         <ApolloProvider client={client}>
           <ThirtyMinutesMap
