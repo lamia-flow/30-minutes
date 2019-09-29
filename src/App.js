@@ -1,6 +1,13 @@
 import React from "react";
 import ThirtyMinutesMap from './ThirtyMinutesMap';
 import axios from 'axios';
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
+
+const client = new ApolloClient({
+  uri: "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql"
+});
+
 
 class App extends React.Component {
   constructor(props) {
@@ -52,11 +59,25 @@ class App extends React.Component {
     }
   }
 
+
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.lat !== this.state.lat || nextState.lng !== this.state.lng || nextState.stations !== this.state.stations || this.newCenter(nextState)) {
+      return true;
+    }
+
+    return false;
+  }
+
   render() {
     const {lat, lng, stations, area} = this.state
 
     if(lat && lng && stations) {
-      return <ThirtyMinutesMap lat={lat} lng={lng} stations={stations} key={stations} area={area} />;
+      return (
+        <ApolloProvider client={client}>
+          <ThirtyMinutesMap lat={lat} lng={lng} stations={stations} key={stations} area={area} />
+        </ApolloProvider>
+      );
     }
 
     return <div>Loading...</div>

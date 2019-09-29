@@ -14,7 +14,9 @@ import StationArea from './components/StationArea';
 const windowSizing = () => ({
     height: `100vh`,
     width: `100vw`
-});    
+});
+
+
   
 class ThirtyMinutesMap extends React.Component {
 
@@ -31,6 +33,7 @@ class ThirtyMinutesMap extends React.Component {
         areaLat: null,
         areaLng: null,
       },
+      stations: this.props.stations,
     };
   }
 
@@ -70,23 +73,23 @@ class ThirtyMinutesMap extends React.Component {
   }
 
   onStationSelect = station => () => {
-    const {y: lat, x: lng} = station;
+    const {y, x} = station;
 
     this.setState({
       area: {
-        center: {lat, lng},
+        center: {lat: y, lng: x},
         radius: 3000, // @todo reserve this from original?
       },
-      areaLat: lat,
-      areaLng: lng,
+      areaLat: y,
+      areaLng: x,
     });
   }
 
   render() {
     const locationMarkerIcon = markerIcon(require('./icon/map-marker.svg'));
-    const position = [this.props.lat, this.props.lng];
-    const {stations} = this.props;
-    const {center} = this.state.area;
+    const position = [ this.props.lat, this.props.lng ];
+    const { stations } = this.state;
+    const { center } = this.state.area;
 
     return (
         <Map center={position} zoom={13} style={windowSizing()}>
@@ -94,7 +97,7 @@ class ThirtyMinutesMap extends React.Component {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://cdn.digitransit.fi/map/v1/hsl-map-256/{z}/{x}/{y}.png"
           />
-          <StationsList stations={this.stationsInsideCircle(stations, this.state.area.center)} stationSelect={this.onStationSelect} />
+          <StationsList center={center} stations={this.stationsInsideCircle(stations, this.state.area.center)} stationSelect={this.onStationSelect} />
           <Marker position={position} icon={locationMarkerIcon}>
             <Popup>You are here</Popup>
           </Marker>

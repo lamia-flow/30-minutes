@@ -1,6 +1,6 @@
 import React, {Fragment} from "react";
-
-import StationMarker from './StationMarker';
+import StationMarkerInside from './StationMarkerInside';
+import StationMarkerOutside from './StationMarkerOutside';
 
 class StationsList extends React.Component {
     componentDidUpdate(prevProps, prevState) {
@@ -16,12 +16,17 @@ class StationsList extends React.Component {
     }
 
     render() {
-      const { stationSelect } = this.props;
+      const { stationSelect, center, stations } = this.props;
+      const stationsInside = stations.filter(station => station.isInside);
+      const stationsOutside = stations.filter(station => !station.isInside);
       if(this.props.stations.length > 0) {
-        const items = this.props.stations.map(station => (
-          <StationMarker key={station.id} station={station} onClick={stationSelect(station)} />
+        const stationsInsideItems = stationsInside.map(station => (
+          <StationMarkerInside center={center} key={station.id} station={station} onClick={stationSelect(station)} />
         ))
-        return <Fragment>{items}</Fragment>
+        const stationsOutsideItems = stationsOutside.map(station => (
+          <StationMarkerOutside center={center} key={station.id} station={station} onClick={stationSelect(station)} />
+        ))
+        return <Fragment>{stationsInsideItems} {stationsOutsideItems}</Fragment>
       }
       return <div>Empty</div>
     }
