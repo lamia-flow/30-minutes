@@ -23,12 +23,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - name: Download
+    - name: Download application
       uses: actions/download-artifact@master
       with:
         name: app
         path: .
-    - name: Init
+    - name: Download CNAME
+      run: wget https://raw.githubusercontent.com/${{github.repository}}/gh-pages/CNAME
+    - name: Initialize git
       run: |
         git init .
         git config user.name ${{github.event.pusher.name}} 
@@ -37,6 +39,6 @@ jobs:
     - name: Commit
       run: |
         git add .
-        git commit -m ${{github.sha}}
+        git commit -m "Deploy ${{github.ref}}"
     - name: Push
       run: git push origin master:gh-pages --force
