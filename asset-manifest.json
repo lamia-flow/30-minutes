@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.754f6db8.chunk.css",
+    "main.js": "/static/js/main.6a4a41ad.chunk.js",
+    "main.js.map": "/static/js/main.6a4a41ad.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.20ca175d.js",
+    "runtime-main.js.map": "/static/js/runtime-main.20ca175d.js.map",
+    "static/css/2.098bc035.chunk.css": "/static/css/2.098bc035.chunk.css",
+    "static/js/2.efb441a0.chunk.js": "/static/js/2.efb441a0.chunk.js",
+    "static/js/2.efb441a0.chunk.js.map": "/static/js/2.efb441a0.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.f1c19028c2c82ec6fc1c9438fa1dac9d.js": "/precache-manifest.f1c19028c2c82ec6fc1c9438fa1dac9d.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.098bc035.chunk.css.map": "/static/css/2.098bc035.chunk.css.map",
+    "static/css/main.754f6db8.chunk.css.map": "/static/css/main.754f6db8.chunk.css.map",
+    "static/media/citybike.svg": "/static/media/citybike.36bcc6d2.svg",
+    "static/media/notgonnamakeit.svg": "/static/media/notgonnamakeit.cb5634bc.svg",
+    "static/media/youarehere.svg": "/static/media/youarehere.eb9a9cc8.svg"
+  }
+}
