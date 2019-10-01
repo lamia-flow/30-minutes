@@ -11,7 +11,7 @@ const StationArea = ({ center, radius }) => {
     }
 
     return (
-        <Circle center={center} radius={radius}></Circle>
+        <Circle center={center} radius={radius} fill={false} color="#4258ce"></Circle>
     );
 }
 
