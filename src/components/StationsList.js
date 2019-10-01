@@ -22,10 +22,12 @@ class StationsList extends React.Component {
       if(this.props.stations.length > 0) {
         const stationsInsideItems = stationsInside.map(station => (
           <StationMarkerInside center={center} key={station.id} station={station} onClick={stationSelect(station)} />
-        ))
+        ));
+
         const stationsOutsideItems = stationsOutside.map(station => (
           <StationMarkerOutside center={center} key={station.id} station={station} onClick={stationSelect(station)} />
-        ))
+        ));
+
         return <Fragment>{stationsInsideItems} {stationsOutsideItems}</Fragment>
       }
       return <div>Empty</div>
