@@ -1,6 +1,4 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
 import {
   Marker,
   Popup,
@@ -9,7 +7,6 @@ import markerIcon from '../leaflet/markerIcon';
 
 const StationMarkerOutside = ({ station, onClick, center }) => {
     const icon = markerIcon(require('../icon/notgonnamakeit.svg'));
-
 
     return (
         <Marker position={[station.y, station.x]} icon={icon} onClick={onClick}>
